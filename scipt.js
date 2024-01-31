@@ -1,64 +1,62 @@
 const container = document.getElementById('container');
 const sizeBtn = document.getElementById('sizeBtn');
 const colorBtn = document.getElementById('colorBtn')
-let gridSize = 16;
 
+let gridSquares = 16;
+let randomColorOnHover = false;
 
+const printGrid = (gridSquares) => {
+    for (let i = 0; i < gridSquares; i++) {
+        for (let j = 0; j < gridSquares; j++) {
+            const square = document.createElement('div');
+            square.classList.add('grid-square');
+            // Set the width and height of each square dynamically
+            square.style.width = `${640 / gridSquares}px`;
+            square.style.height = `${640 / gridSquares}px`;
+            square.addEventListener('mouseover', () => {
+                if (randomColorOnHover) {
+                    square.style.backgroundColor = getRandomColor(); // Change to random color on mouseover if flag is true
+                } else {
+                    square.style.backgroundColor = 'black'; // Change to black on mouseover if flag is false
+                }
+            });            
+            container.appendChild(square);
+        }
+    }
+}; 
 
+const getRandomColor = () => {
+    // Generate random RGB values
+    const randomRed = Math.floor(Math.random() * 256);
+    const randomGreen = Math.floor(Math.random() * 256);
+    const randomBlue = Math.floor(Math.random() * 256);
+
+    return `rgb(${randomRed}, ${randomGreen}, ${randomBlue})`;
+};
 
 const setGrid = () => {
-    let newSize = prompt('Enter a number between 4 and 100');
+    let newSquares = prompt('Enter a number between 4 and 100');
     
     // Parse the input to ensure it's treated as a number
-    newSize = parseInt(newSize);
+    newSquares = parseInt(newSquares);
 
-    if (newSize >= 4 && newSize <= 100) {
-        gridSize = newSize;
-        console.log(gridSize);
+    if (newSquares >= 4 && newSquares <= 100) {
+        gridSquares = newSquares;
 
         // Clear existing grid before creating a new one
         container.innerHTML = '';
 
-        // Calculate the size of each grid square based on the container size and number of squares
-        const squareSize = 640 / gridSize;
-
-        // Create a new grid with the updated size
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                const square = document.createElement('div');
-                square.classList.add('grid-square');
-
-                // Set the width and height of each square dynamically
-                square.style.width = squareSize + 'px';
-                square.style.height = squareSize + 'px';
-
-                square.addEventListener('mouseover', () => {
-                    square.style.backgroundColor = 'black';
-                });
-
-                container.appendChild(square);
-            }
-        }
+        printGrid(gridSquares);
     } else {
         alert('Invalid Input. Please enter a number between 4 and 100.');
     }
 };
 
-   
+const changeColors = () => {
+    randomColorOnHover = !randomColorOnHover; // Toggle the flag
+};
 
-sizeBtn.addEventListener('click', setGrid);
+sizeBtn.addEventListener('click', setGrid); 
+colorBtn.addEventListener('click', changeColors);  
 
-document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-            const square = document.createElement('div');
-            square.classList.add('grid-square');
-            square.addEventListener('mouseover', () => {
-                square.style.backgroundColor = 'black';
-            });            
-            container.appendChild(square);
-        }
-    }
-});
-
-
+printGrid(gridSquares);
